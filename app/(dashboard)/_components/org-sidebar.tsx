@@ -28,7 +28,7 @@ export const OrgSidebar = () => {
                         width={60} 
                     />
                     <span className={cn("font-semibold text-2xl", font.className,)}>
-                        Board
+                        Blocs
                     </span>
                 </div>
             </Link>
