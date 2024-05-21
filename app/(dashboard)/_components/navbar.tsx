@@ -6,7 +6,7 @@ import { OrganizationSwitcher } from "@clerk/nextjs";
 import { InviteButton } from "./invite-button";
 
 export const Navbar = () => {
-    /* only render the invite button if the user has an organization */
+    /* only render the invite button if the user has an active organization */
     const { organization } = useOrganization();
 
     return (
