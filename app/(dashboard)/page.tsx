@@ -1,6 +1,8 @@
 "use client";
 
 import { EmptyOrg } from "./_components/empty-org";
+import { BoardList } from "./_components/board-list";
+
 import { useOrganization } from "@clerk/nextjs";
 
 /* destructure parameters of favorite boards to access in the url */
@@ -18,11 +20,13 @@ const DashboardPage = ({
     const { organization } = useOrganization();
     return (
         <div className=" flex-1 h-[calc(100%-80px)] p-6">
-            {JSON.stringify(searchParams)}
             {!organization ? (
                 <EmptyOrg />
             ) : (
-                <p>Bloc List</p>
+                <BoardList 
+                    orgId={organization.id}
+                    query={searchParams}
+                />
             )}
         </div>
     );
