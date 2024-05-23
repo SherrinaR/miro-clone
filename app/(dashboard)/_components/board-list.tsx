@@ -1,6 +1,6 @@
 "use client"
 
-import { EmptyBlocs } from "./empty-blocs";
+import { EmptyBoards } from "./empty-boards";
 import { EmptyFavorites } from "./empty-favorites";
 import { EmptySearch } from "./empty-search";
 
@@ -45,7 +45,7 @@ export const BoardList = ({
     if (!data?.length) {
         return (
             <div>
-                <EmptyBlocs />
+                <EmptyBoards />
             </div>
         );
     }

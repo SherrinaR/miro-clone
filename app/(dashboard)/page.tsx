@@ -13,7 +13,7 @@ interface DashboardPageProps {
     };
 };
 
-/*if there is no org render EmptyOrg to create an org otherwise display Bloc list */
+/*if there is no orgs render EmptyOrg to create an org otherwise display Bloc list */
 const DashboardPage = ({
     searchParams,
 }: DashboardPageProps) => {
