@@ -1,8 +1,12 @@
 "use client";
 
+import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
+
 import { Overlay } from "./overlay";
+import { useAuth } from "@clerk/nextjs";
+import { Footer } from "./footer";
 
 interface BoardCardProps {
     id: string;
@@ -25,6 +29,14 @@ export const BoardCard = ({
     orgId,
     isFavorite,
 }: BoardCardProps) => {
+    /* create author labels */
+    const { userId } = useAuth();
+
+    const authorLabel = userId === authorId ? "You" : authorName;
+    const createdAtLabel = formatDistanceToNow(createdAt, {
+        addSuffix: true,
+    });
+
     return (
         <Link href={`/board/${id}`}>
             <div className="group aspect-[100/127] border rounded-lg flex
@@ -38,6 +50,14 @@ export const BoardCard = ({
                     />
                     <Overlay />
                 </div>
+                <Footer
+                    isFavorite={isFavorite}
+                    title={title}
+                    authorLabel={authorLabel}
+                    createdAtLabel={createdAtLabel}
+                    onClick={() => { }}
+                    disabled={false}
+                />
             </div>
         </Link>
     );

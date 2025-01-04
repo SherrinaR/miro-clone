@@ -80,7 +80,7 @@ export const BoardList = ({
                         authorName={board.authorName}
                         createdAt={board._creationTime}
                         orgId={board.orgId}
-                        isFavorite={false}
+                        isFavorite={true}
                     />
                 ))}
             </div>
