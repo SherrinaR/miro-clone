@@ -3,12 +3,12 @@ import { mutation } from "./_generated/server";
 
 /* create array of images */
 const images = [
-    "/placehonders/Sample 13.svg",
-    "/placehonders/Sample 19.svg",
-    "/placehonders/Sample 24.svg",
-    "/placehonders/Sample 34.svg",
-    "/placehonders/Sample 35.svg",
-    "/placehonders/Sample 42.svg",
+    "/placeholders/Sample 13.svg",
+    "/placeholders/Sample 19.svg",
+    "/placeholders/Sample 24.svg",
+    "/placeholders/Sample 34.svg",
+    "/placeholders/Sample 35.svg",
+    "/placeholders/Sample 42.svg",
 ]
 
 /* create an API route to create boards */

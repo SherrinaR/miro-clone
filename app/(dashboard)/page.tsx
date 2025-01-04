@@ -13,7 +13,7 @@ interface DashboardPageProps {
     };
 };
 
-/*if there is no orgs render EmptyOrg to create an org otherwise display Bloc list */
+/*if there is no orgs render EmptyOrg to create an org otherwise display board list */
 const DashboardPage = ({
     searchParams,
 }: DashboardPageProps) => {
@@ -23,7 +23,7 @@ const DashboardPage = ({
             {!organization ? (
                 <EmptyOrg />
             ) : (
-                <BoardList 
+                <BoardList
                     orgId={organization.id}
                     query={searchParams}
                 />
