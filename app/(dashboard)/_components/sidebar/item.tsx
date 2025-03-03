@@ -39,7 +39,8 @@ export const Item = ({
                 sideOffset={18}
             >
                 <Image 
-                    fill
+                    width="50"
+                    height="50"
                     alt={name}
                     src={imageUrl}
                     onClick={onClick}

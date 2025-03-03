@@ -10,7 +10,7 @@ export const List = () => {
         },
     });
 
-    /* if there are no user memberships */
+    /* if there are no user memberships return null */
     if (!userMemberships.data?.length) return null;
     /* get individual memberships and render org name on sidebar*/
     return (
