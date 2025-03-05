@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Overlay } from "./overlay";
 import { useAuth } from "@clerk/nextjs";
 import { Footer } from "./footer";
+import { Actions } from "@/components/actions";
 
 interface BoardCardProps {
     id: string;
@@ -51,6 +52,15 @@ export const BoardCard = ({
                         className="object-fit"
                     />
                     <Overlay />
+                    <Actions
+                        id={id}
+                        title={title}
+                        side="right"
+                    >
+                        <button>
+                            I am a button
+                        </button>
+                    </Actions>
                 </div>
                 <Footer
                     isFavorite={isFavorite}
