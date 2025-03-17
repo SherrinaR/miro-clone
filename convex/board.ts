@@ -34,5 +34,21 @@ export const create = mutation({
             imageUrl: randomImage,
         });
         return board;
-    }
-})
+    },
+});
+
+/* the delete functionality for boards */
+export const remove = mutation({
+    args: {id: v.id("boards") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Unauthorized");
+        }
+
+        // TODO: Check to delete favorit relation
+
+        await ctx.db.delete(args.id);
+    },
+});
