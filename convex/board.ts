@@ -144,15 +144,16 @@ export const unfavorite = mutation({
 
         const existingFavorite = await ctx.db
             .query("userFavorites")
-            .withIndex("by_user_board", (q) =>
+            .withIndex("by_user_board_org", (q) =>
                 q
                     .eq("userId", userId)
                     .eq("boardId", board._id)
+                    .eq("orgId", args.orgId)
             )
             .unique();
         
             if (!existingFavorite) {
-            throw new Error("Favorited board not found");
+            throw new Error("Board already favorited");
         }
 
         await ctx.db.delete(existingFavorite._id);
