@@ -25,7 +25,7 @@ export const get = query({
         
             const boardswithFavoriteRelation = boards.map((board) => {
             return ctx.db
-                .query("useFavorites")
+                .query("userFavorites")
                 .withIndex("by_user_board", (q) =>
                     q
                         .eq("userId", identity.subject)

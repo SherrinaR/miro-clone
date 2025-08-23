@@ -10,10 +10,10 @@ export const EmptyFavorites = () => {
                 alt="Empty"
             />
             <h2 className="text-2xl font-semibold mt-6">
-                No favorite blocs!
+                No favorite boards!
             </h2>
             <p className="text-muted-foreground textg-sm mt-2">
-                Try favoriting a bloc
+                Try favoriting a board
             </p>
         </div>
     );
