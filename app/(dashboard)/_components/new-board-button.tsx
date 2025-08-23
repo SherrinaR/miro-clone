@@ -5,6 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 /* to creat a new board within Team board */
 
@@ -19,7 +20,7 @@ export const NewBoardButton = ({
 }: NewBoardButtonProps) => {
     /* functionality to create a new board */
     /* option 1: const create = useMutation(api.board.create); */
-
+    const router = useRouter();
     const { mutate, pending } = useApiMutation(api.board.create);
 
     const onClick = () => {
@@ -30,6 +31,7 @@ export const NewBoardButton = ({
             .then((id) => {
                 toast.success("Board created");
                 // TODO: Redirect to /board/{id}
+                router.push(`/board/${id}`);
             })
             .catch(() => toast.error("Failed to create board"));
     }
