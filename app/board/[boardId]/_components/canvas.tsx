@@ -1,9 +1,13 @@
-"use client"
+"use client";
+
+import { Info } from "./info";
 
 export const Canvas = () => {
     return (
-        <div>
-            Canvas!
-        </div>
+        <main
+            className="h-full w-full relative bg-neutral-100 touch-none"
+        >
+            <Info />
+        </main>
     );
 };
