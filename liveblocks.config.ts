@@ -2,7 +2,7 @@ import { createClient } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 
 const client = createClient({
-  publicApiKey: "pk_dev_KkPTdFJ4Mh-vCDaqo31aYL0vZjuGfosNLmTU-l11tKPijn3QXpwugywoY8ZUeRT1",
+  authEndpoint: "/api/liveblocks-auth",
 });
 
 type Presence = {
@@ -11,6 +11,14 @@ type Presence = {
 
 type Storage = {
   // cursor
+};
+
+type UserMeta = {
+  id?: string;
+  info?: {
+    name?: string;
+    picture?: string;
+  };
 };
 
 
