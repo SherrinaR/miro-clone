@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";
-import { CanvasState } from "@/types/canvas";
+import { CanvasMode, CanvasState } from "@/types/canvas";
 
 
 interface ToolbarProps {
@@ -36,8 +36,10 @@ export  const Toolbar = ({
                 <ToolButton 
                     label="Select"
                     icon={MousePointer2}
-                    onClick={() => {}}
-                    isActive={false}
+                    onClick={() => setCanvasState({ mode: CanvasMode.None, })}
+                    isActive={
+                        canvasState.mode === CanvasMode.None
+                    }
                 />
                 <ToolButton 
                     label="Text"
