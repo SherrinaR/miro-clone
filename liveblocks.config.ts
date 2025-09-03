@@ -6,7 +6,7 @@ const client = createClient({
 });
 
 type Presence = {
-  // cursor
+  cursor: { x: number; y: number } | null;
 };
 
 type Storage = {

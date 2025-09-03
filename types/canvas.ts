@@ -88,35 +88,35 @@ export enum Side {
 };
 
 export type CanvasState = 
-    {
+   | {
         mode: CanvasMode.None;
     }
-    {
-        mode: CanvasMode.SelectionNet,
+    | {
+        mode: CanvasMode.SelectionNet;
         origin: Point;
         current?: Point;
     }
-    {
-        mode: CanvasMode.Translating,
+    | {
+        mode: CanvasMode.Translating;
         current: Point;
     }
-    {
-        mode: CanvasMode.Inserting,
+    | {
+        mode: CanvasMode.Inserting;
         layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note
     }
-    {
+    | {
         mode: CanvasMode.Pencil,
     }
-    {
-        mode: CanvasMode.Pressing,
+    | {
+        mode: CanvasMode.Pressing;
         origin: Point;
     }
-    {
-        mode: CanvasMode.Resizing,
+    | {
+        mode: CanvasMode.Resizing;
         initialBounds: XYWH;
         corner: Side;
-    };
-
+    }
+    
 export enum CanvasMode {
     None,
     Pressing,

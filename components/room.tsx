@@ -15,7 +15,7 @@ export const Room = ({
     roomId,
 }:  RoomProps) => {
         return (
-            <RoomProvider id={roomId} initialPresence={{}}>
+            <RoomProvider id={roomId} initialPresence={{ cursor: null,}}>
                 <ClientSideSuspense fallback={<div>Loading...</div>}>
                     {() => children}
                 </ClientSideSuspense>
