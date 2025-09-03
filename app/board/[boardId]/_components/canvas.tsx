@@ -46,6 +46,12 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         setMyPresence({ cursor: current });
     }, []);
 
+    const onPointerLeave = useMutation((
+        { setMyPresence }, 
+    ) => {
+        setMyPresence({ cursor: null });
+    }, []);
+
     return (
         <main
             className="h-full w-full relative bg-neutral-100 touch-none"
@@ -64,6 +70,7 @@ export const Canvas = ({boardId,}: CanvasProps) => {
                 className="h-[100vh] w-[100vw]"
                 onWheel={onWheel}
                 onPointerMove={onPointerMove}
+                onPointerLeave={onPointerLeave}
             >
                 <g>
                     <CursorsPresence />
