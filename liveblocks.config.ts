@@ -1,5 +1,12 @@
-import { createClient } from "@liveblocks/client";
+import { 
+  createClient,
+  LiveList,
+  LiveMap,
+  LiveObject,
+ } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
+
+import { Layer, Color } from "./types/canvas";
 
 const client = createClient({
   throttle: 16,
@@ -8,10 +15,12 @@ const client = createClient({
 
 type Presence = {
   cursor: { x: number; y: number } | null;
+  selection: string[];
 };
 
 type Storage = {
-  // cursor
+  layers: LiveMap<string, LiveObject<Layer>>;
+  layerIds: LiveList<string>;
 };
 
 type UserMeta = {
