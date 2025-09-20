@@ -40,6 +40,21 @@ export const SelectionBox = memo(({
                 width={bounds.width}
                 height={bounds.height}
             />
+            {isShowingHandles && (
+                <>
+                    <rect 
+                        className="fill-white stroke-blue-500 stroke-1"
+                        x={0}
+                        y={0}
+                        style={{
+                            cursor: "nwse-resize",
+                            width: `${HANDLE_WIDTH}px`,
+                            height: `${HANDLE_WIDTH}px`,
+                            transform: `translate(${bounds.x - HANDLE_WIDTH / 2}px, ${bounds.y - HANDLE_WIDTH / 2}px)`
+                        }}
+                    />
+                </>
+            )}
         </>
     );
 });
