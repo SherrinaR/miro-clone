@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { Camera, CanvasMode, CanvasState, Color, LayerType, Point } from "@/types/canvas";
+import { Camera, CanvasMode, CanvasState, Color, LayerType, Point, Side, XYWH } from "@/types/canvas";
 import { nanoid }from "nanoid";
 
 import { Info } from "./info";
@@ -66,6 +66,19 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         setMyPresence({ selection: [layerId] }, { addToHistory: true });
         setCanvasState({ mode: CanvasMode.None });
     }, [lastUsedColor]);
+
+    /* Resize functionality -> callback function */
+    const onResizeHandlePointerDown = useCallback((
+        corner: Side,
+        initialBounds: XYWH,
+    ) => {
+        history.pause();
+        setCanvasState({
+            mode: CanvasMode.Resizing,
+            initialBounds,
+            corner,
+        });
+    }, [history]);
 
     /* Change camera direction for infinite space */
     const onWheel = useCallback((e: React.WheelEvent) => {
@@ -202,7 +215,7 @@ export const Canvas = ({boardId,}: CanvasProps) => {
                         />
                     ))}
                     <SelectionBox
-                        onResizeHandlePointerDown={() => {}}
+                        onResizeHandlePointerDown={onResizeHandlePointerDown}
                     />
                     <CursorsPresence />
                 </g>
