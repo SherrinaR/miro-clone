@@ -97,6 +97,15 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         setCanvasState({ mode: CanvasMode.Translating, current: point });
     }, [canvasState])
 
+    /* Unselect functionality */
+    const unselectLayers =  useMutation((
+        { self, setMyPresence }
+    ) => {
+        if (self.presence.selection.length > 0) {
+            setMyPresence({ selection: [] }, { addToHistory: true });
+        }
+    }, []);
+
     /* Resize functionality -> callback function */
     const resizeSelectedLayer =  useMutation((
         { storage, self },
@@ -163,6 +172,20 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         setMyPresence({ cursor: null });
     }, []);
 
+    const onPointerDown = useCallback((
+        e: React.PointerEvent,
+    ) => {
+        const point = pointerEventToCanvasPoint(e, camera);
+
+        if (canvasState.mode === CanvasMode.Inserting) {
+            return;
+        }
+
+        // TODO: Add case for drawing
+
+        setCanvasState({ origin: point, mode: CanvasMode.Pressing });
+    }, [camera, canvasState.mode, setCanvasState]);
+
     /* Function is triggered when you point anyhwere on canvas */
     const onPointerUp = useMutation((
         {},
@@ -170,12 +193,16 @@ export const Canvas = ({boardId,}: CanvasProps) => {
     ) => {
         const point = pointerEventToCanvasPoint(e, camera);
 
-        console.log({
-            point,
-            mode: canvasState.mode,
-        });
+        if (
+            canvasState.mode === CanvasMode.None ||
+            canvasState.mode === CanvasMode.Pressing
+        ) {
+            unselectLayers();
 
-        if (canvasState.mode === CanvasMode.Inserting) {
+            setCanvasState({
+                mode: CanvasMode.None,
+            });
+        } else if (canvasState.mode === CanvasMode.Inserting) {
             insertLayer(canvasState.layerType, point);
         } else {
             setCanvasState({
@@ -189,6 +216,7 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         canvasState,
         history,
         insertLayer,
+        unselectLayers,
     ]);
 
     /*Method to get selection color based on user */
@@ -257,6 +285,7 @@ export const Canvas = ({boardId,}: CanvasProps) => {
                 onWheel={onWheel}
                 onPointerMove={onPointerMove}
                 onPointerLeave={onPointerLeave}
+                onPointerDown={onPointerDown}
                 onPointerUp={onPointerUp}
             >
                 <g style={{
