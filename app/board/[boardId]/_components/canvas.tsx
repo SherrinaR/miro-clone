@@ -107,6 +107,23 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         }
     }, []);
 
+    /*Method to create a selection net */
+    const startMultiSelection = useCallback((
+        current: Point,
+        origin: Point,
+    ) => {
+        if ( 
+            Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) > 5
+        ) {
+            console.log("selection net")
+            setCanvasState({
+                mode: CanvasMode.SelectionNet,
+                origin,
+                current,
+            });
+        }
+    }, []);
+
     /* Resize functionality -> callback function */
     const resizeSelectedLayer =  useMutation((
         { storage, self },
@@ -158,9 +175,11 @@ export const Canvas = ({boardId,}: CanvasProps) => {
 
         const current = pointerEventToCanvasPoint(e, camera);
 
-        if(canvasState.mode === CanvasMode.Translating) {
+        if(canvasState.mode === CanvasMode.Pressing) {
+            startMultiSelection(current, canvasState.origin);
+        } else if(canvasState.mode === CanvasMode.Translating) {
             translateSelectedLayers(current);
-        }else if(canvasState.mode === CanvasMode.Resizing) {
+        } else if (canvasState.mode === CanvasMode.Resizing) {
             resizeSelectedLayer(current);
         }
 
