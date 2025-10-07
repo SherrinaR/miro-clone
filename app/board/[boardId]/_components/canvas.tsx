@@ -9,7 +9,7 @@ import { Participants } from "./participants";
 import { Toolbar } from "./toolbar";
 import { useCanRedo, useCanUndo, useHistory, useMutation, useOthersMapped, useStorage,  } from "@/liveblocks.config";
 import { CursorsPresence } from "./cursors-presence";
-import { connectionIdToColor, findIntersectingLayersWithRectangle, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
+import { connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPathLayer, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
@@ -146,6 +146,72 @@ export const Canvas = ({boardId,}: CanvasProps) => {
         }
     }, []);
 
+    /* Function to continue pencil drawing */
+    const continueDrawing =  useMutation((
+        { self, setMyPresence },
+        point: Point,
+        e: React.PointerEvent,
+    ) => {
+        const { pencilDraft } = self.presence;
+
+        if ( canvasState.mode !== CanvasMode.Pencil || e.buttons !== 1 || pencilDraft == null) {
+            return;
+        }
+
+        setMyPresence({
+            cursor: point,
+            pencilDraft:
+                pencilDraft.length === 1 &&
+                pencilDraft[0][0] === point.x &&
+                pencilDraft[0][1] === point.y
+                    ? pencilDraft
+                    : [...pencilDraft, [point.x, point.y, e.pressure]],
+                
+        });
+    }, [canvasState.mode]);
+
+    const insertPath = useMutation((
+        { self, storage, setMyPresence },
+    ) => {
+        const liveLayers = storage.get("layers");
+        const { pencilDraft } = self.presence;
+
+        if ( 
+            pencilDraft == null ||
+            pencilDraft.length < 2 ||
+            liveLayers.size >= MAX_LAYERS
+        ) {
+            setMyPresence({ pencilDraft: null });
+            return;
+        }
+
+        const id = nanoid();
+        liveLayers.set(
+            id,
+            new LiveObject(penPointsToPathLayer(
+                pencilDraft,
+                lastUsedColor,
+            )),
+        );
+
+        const liveLayerIds = storage.get("layerIds");
+        liveLayerIds.push(id);
+
+        setMyPresence({ pencilDraft: null });
+        setCanvasState({ mode: CanvasMode.Pencil });
+    }, [lastUsedColor]);
+
+    /* Function to start pencil drawing */
+    const startDrawing = useMutation((
+        { setMyPresence },
+        point: Point,
+        pressure: number,
+    ) => {
+        setMyPresence({
+            pencilDraft: [[point.x, point.y, pressure]],
+            penColor: lastUsedColor,        })
+    }, [lastUsedColor]);
+
     /* Resize functionality -> callback function */
     const resizeSelectedLayer =  useMutation((
         { storage, self },
@@ -205,10 +271,12 @@ export const Canvas = ({boardId,}: CanvasProps) => {
             translateSelectedLayers(current);
         } else if (canvasState.mode === CanvasMode.Resizing) {
             resizeSelectedLayer(current);
+        } else if (canvasState.mode === CanvasMode.Pencil) {
+            continueDrawing(current, e);
         }
 
         setMyPresence({ cursor: current });
-    }, [camera, canvasState, resizeSelectedLayer, translateSelectedLayers]);
+    }, [camera, canvasState, continueDrawing, resizeSelectedLayer, translateSelectedLayers, startMultiSelection, updateSelectionNet]);
 
     const onPointerLeave = useMutation((
         { setMyPresence }, 
@@ -225,12 +293,15 @@ export const Canvas = ({boardId,}: CanvasProps) => {
             return;
         }
 
-        // TODO: Add case for drawing
+        if (canvasState.mode === CanvasMode.Pencil) {
+            startDrawing(point, e.pressure);
+            return;
+        }
 
         setCanvasState({ origin: point, mode: CanvasMode.Pressing });
-    }, [camera, canvasState.mode, setCanvasState]);
+    }, [camera, canvasState.mode, setCanvasState, startDrawing]);
 
-    /* Function is triggered when you point anyhwere on canvas */
+    /* Function is triggered when you point anywhere on canvas */
     const onPointerUp = useMutation((
         {},
         e
@@ -246,6 +317,8 @@ export const Canvas = ({boardId,}: CanvasProps) => {
             setCanvasState({
                 mode: CanvasMode.None,
             });
+        } else if (canvasState.mode === CanvasMode.Pencil) {
+            insertPath();
         } else if (canvasState.mode === CanvasMode.Inserting) {
             insertLayer(canvasState.layerType, point);
         } else {
@@ -256,11 +329,13 @@ export const Canvas = ({boardId,}: CanvasProps) => {
 
         history.resume();
     }, [
+        setCanvasState,
         camera,
         canvasState,
         history,
         insertLayer,
         unselectLayers,
+        insertPath,
     ]);
 
     /*Method to get selection color based on user */

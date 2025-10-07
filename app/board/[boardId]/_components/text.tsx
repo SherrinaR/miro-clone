@@ -39,7 +39,7 @@ export const Text = ({
 }: TextProps) => {
     const { x, y, width, height, fill, value } = layer;
 
-    /* Medthod to synchronize texts */
+    /* Method to synchronize texts changes */
     const updateValue = useMutation((
         { storage },
         newValue: string,
